@@ -1,0 +1,68 @@
+\title{{ '{' }}{{ common.name.last | tex_escape }}, {{ common.name.first | tex_escape }} - Resume{{ '}' }}
+\author{{ '{' }}{{ common.name.first | tex_escape }} {{ common.name.last | tex_escape }}{{ '}' }}
+\documentclass[10pt]{article}
+\usepackage[hidelinks]{hyperref}
+\usepackage{enumitem}
+\usepackage[top=.5in, bottom=.5in, left=.5in, right=.6in]{geometry}
+\pagenumbering{gobble}
+\setlength{\tabcolsep}{0in}
+\setlist[itemize]{topsep=3pt,itemsep=2pt,parsep=0pt}
+\begin{document}
+  \fontsize{9}{10.5}\selectfont
+  \begin{center}
+    \textbf{\LARGE {{ common.name.first | tex_escape }} {{ common.name.last | tex_escape }}} \\
+  {{ common.pdf_location | tex_escape }}~\href{mailto:{{ common.email | tex_escape }}}{{ '{' }}{{ common.email | tex_escape }}{{ '}' }} \\
+  \end{center}
+
+  {{ common.summary | tex_escape }}
+
+  \vspace{0.5em}
+  {\large \textbf{Experience}}
+
+  \begin{itemize}
+
+    {% for job in experience %}
+    \item
+    \begin{tabular}{p{0.68\linewidth}p{0.32\linewidth}}
+      \textbf{{ '{' }}{{ job.company | tex_escape }}{{ '}' }}, {{ job.location | tex_escape }} & \raggedleft {{ job.date | tex_escape }} \tabularnewline
+      \multicolumn{2}{l}{{ '{' }}{{ job.title | tex_escape }}{{ '}' }}
+    \end{tabular}
+    \begin{itemize}
+      {% for point in job.points %}
+      \item {{ point | tex_escape }}
+      {% endfor %}
+    \end{itemize}
+    {% endfor %}
+
+  \end{itemize}
+
+  \vspace{0.5em}
+  {\large \textbf{Skills}}
+
+  \begin{flushleft}
+    \addtolength{\leftskip}{.3in}
+
+    {% for label, values in skills.items() %}
+    \textbf{{ '{' }}{{ label | tex_escape }}{{ '}' }}: {{ values | join(', ') | tex_escape }}
+    \vspace{0.3em}
+    {% endfor %}
+  \end{flushleft}
+
+  \vspace{0.5em}
+  {\large \textbf{Certifications}}
+  \begin{itemize}
+      {% for cert in common.certifications %}
+      \item {{ cert | tex_escape }}
+      {% endfor %}
+  \end{itemize}
+
+  \vspace{0.5em}
+  {\large \textbf{Education}}
+  \begin{itemize}
+    {% for edu in common.education %}
+    \item
+      \textbf{{ '{' }}{{ edu.institution | tex_escape }}{{ '}' }}, {{ edu.degree | tex_escape }} {{ edu.date | tex_escape }}
+    {% endfor %}
+  \end{itemize}
+
+\end{document}

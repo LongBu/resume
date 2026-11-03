@@ -1,0 +1,42 @@
+# [Download PDF]({{ common.pdf | urlencode }})
+
+{{ common.name.first }} {{ common.name.last }}\
+[{{ common.email }}](mailto:{{ common.email }})\
+{{ common.location }}
+
+{{ common.summary }}\
+
+Experience:
+-----------
+
+{% for job in experience %}
+- **{{ job.company }}, {{ job.location }}**\
+*{{ job.title }} - {{ job.date }}*\
+  {% for point in job.points %}
+    - {{ point }}
+  {% endfor %}
+{% endfor %}
+
+
+Skills:
+-----------
+
+{% for label, values in skills.items() %}
+### {{ label }}:
+  * {{ values | join(', ') }}
+
+{% endfor %}
+Certifications:
+--------------
+
+{% for cert in common.certifications %}
+  * {{ cert }}
+{% endfor %}
+
+Education:
+----------
+
+{% for edu in common.education %}
+**{{ edu.institution }}**\
+{{ edu.degree }} {{ edu.date }}
+{% endfor %}

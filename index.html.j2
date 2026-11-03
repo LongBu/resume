@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+{%- macro icon(name, class) -%}
+<svg class="{{ class }}" viewBox="0 0 24 24" fill="currentColor">{% include 'logos/' ~ name ~ '.svg' %}</svg>
+{%- endmacro -%}
+{%- macro line_icon(name, class) -%}
+<svg class="{{ class }}" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">{% include 'icons/' ~ name ~ '.svg' %}</svg>
+{%- endmacro -%}
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{{ common.name.first }} {{ common.name.last }} — Resume</title>
+  <link rel="stylesheet" href="assets/resume.css" />
+</head>
+<body class="min-h-screen bg-zinc-50 text-zinc-900 dark:bg-zinc-950 dark:text-zinc-100">
+  <div class="mx-auto max-w-5xl px-5 py-8 sm:px-8 sm:py-10 lg:px-10">
+
+    <header class="rounded-3xl border border-zinc-200 bg-white p-7 shadow-sm dark:border-white/10 dark:bg-white/5 dark:shadow-xl dark:backdrop-blur">
+      <div class="flex flex-col gap-6 lg:flex-row lg:items-start lg:justify-between">
+        <div class="max-w-3xl">
+          <h1 class="text-4xl font-semibold tracking-tight sm:text-5xl">{{ common.name.first }} {{ common.name.last }}</h1>
+          <div class="mt-3 inline-flex items-center gap-2 rounded-full border border-cyan-300 bg-cyan-50 px-3 py-1 text-xs font-medium tracking-wide text-cyan-700 dark:border-cyan-400/30 dark:bg-cyan-500/10 dark:text-cyan-300 dark:shadow-sm dark:shadow-cyan-500/10">
+            {{ line_icon('sparkles', 'h-3.5 w-3.5') }}
+            {{ common.headline }}
+          </div>
+          <p class="mt-4 text-lg leading-8 text-zinc-600 dark:text-zinc-300">
+            {{ common.summary }}
+          </p>
+          <div class="mt-5 flex flex-wrap items-center gap-3 text-sm text-zinc-500 dark:text-zinc-400">
+            <span>{{ common.location }}</span>
+            <a href="mailto:{{ common.email }}" class="group inline-flex items-center gap-1.5 transition duration-150 hover:-translate-y-0.5 hover:text-current">
+              {{ line_icon('mail', 'h-4 w-4 transition group-hover:rotate-3 group-hover:text-cyan-500') }}
+              <span>{{ common.email }}</span>
+            </a>
+            {% if common.linkedin %}<a href="{{ common.linkedin }}" target="_blank" rel="noopener noreferrer" class="group inline-flex items-center gap-1.5 transition duration-150 hover:-translate-y-0.5 hover:text-current">
+              {{ icon('linkedin', 'h-4 w-4 transition group-hover:-rotate-3 group-hover:text-cyan-500') }}
+              <span>LinkedIn</span>
+            </a>{% endif %}
+            {% if common.github %}<a href="{{ common.github }}" target="_blank" rel="noopener noreferrer" class="group inline-flex items-center gap-1.5 transition duration-150 hover:-translate-y-0.5 hover:text-current">
+              {{ icon('github', 'h-4 w-4 transition group-hover:-rotate-3 group-hover:text-cyan-500') }}
+              <span>GitHub</span>
+            </a>{% endif %}
+          </div>
+        </div>
+        <div class="flex flex-col items-stretch gap-3 sm:flex-row sm:items-center lg:flex-col lg:items-end">
+          <div class="flex gap-2 self-end">
+            <button id="theme-toggle" class="rounded-2xl border border-zinc-200 bg-white p-3 text-zinc-700 transition hover:-translate-y-0.5 hover:bg-zinc-50 dark:border-white/10 dark:bg-white/5 dark:text-zinc-200 dark:hover:bg-white/10" aria-label="Cycle theme">
+              <span id="icon-system-wrap">{{ line_icon('monitor', 'h-4 w-4') }}</span>
+              <span id="icon-dark-wrap" class="hidden">{{ line_icon('moon', 'h-4 w-4') }}</span>
+              <span id="icon-light-wrap" class="hidden">{{ line_icon('sun', 'h-4 w-4') }}</span>
+            </button>
+          </div>
+          <div class="flex flex-col gap-3 sm:flex-row lg:flex-col lg:min-w-[220px]">
+            <a href="{{ common.pdf | urlencode }}" class="group inline-flex items-center justify-center gap-2 rounded-2xl bg-zinc-900 px-5 py-3 text-sm font-semibold text-white shadow-sm transition hover:-translate-y-1 dark:bg-white dark:text-zinc-950 dark:shadow-lg">
+              {{ line_icon('download', 'h-4 w-4 transition group-hover:rotate-6') }}
+              Download PDF
+            </a>
+            <a href="README.md" class="group inline-flex items-center justify-center gap-2 rounded-2xl border border-zinc-200 bg-white px-5 py-3 text-sm font-semibold text-zinc-900 transition hover:-translate-y-1 hover:bg-zinc-50 dark:border-white/15 dark:bg-white/5 dark:text-white dark:hover:bg-white/10">
+              {{ line_icon('file-text', 'h-4 w-4 transition group-hover:-rotate-3') }}
+              View Markdown Source
+            </a>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <main class="mt-8 grid items-start gap-8 lg:grid-cols-[1.5fr_0.8fr]">
+
+      <section class="rounded-3xl border border-zinc-200 bg-white p-7 shadow-sm dark:border-white/10 dark:bg-white/5 dark:shadow-xl dark:backdrop-blur">
+        <h2 class="mb-6 text-xl font-semibold">Experience</h2>
+        <div class="space-y-8">
+          {%- for job in experience %}
+          <article class="{{ 'border-b border-zinc-200 pb-8 dark:border-white/10' if not loop.last else 'pb-0' }}">
+            <div class="flex gap-4">
+              {%- if job.logo %}
+              <div class="flex-none h-10 w-10 rounded-xl bg-zinc-100 dark:bg-white/10 flex items-center justify-center overflow-hidden">
+                <img src="logos/{{ job.logo }}-color.svg" class="h-7 w-7 object-contain dark:hidden" alt="{{ job.company }}">
+                <img src="logos/{{ job.logo }}-color-dark.svg" class="h-7 w-7 object-contain hidden dark:block" alt="{{ job.company }}">
+              </div>
+              {%- endif %}
+              <div class="flex-1">
+                <div class="flex flex-col gap-2 sm:flex-row sm:items-baseline sm:justify-between">
+                  <div>
+                    <h3 class="text-lg font-semibold">{{ job.company }}</h3>
+                    <p class="text-sm text-zinc-600 dark:text-zinc-300">{{ job.title }} · {{ job.location }}</p>
+                  </div>
+                  <div class="text-sm text-zinc-500 dark:text-zinc-400">{{ job.date }}</div>
+                </div>
+              </div>
+            </div>
+            <ul class="mt-4 space-y-3 text-sm leading-7 text-zinc-600 dark:text-zinc-300">
+              {%- for point in job.points %}
+              <li class="flex gap-3">
+                <span class="mt-2 h-1.5 w-1.5 flex-none rounded-full bg-cyan-500"></span>
+                <span>{{ point }}</span>
+              </li>
+              {%- endfor %}
+            </ul>
+          </article>
+          {%- endfor %}
+        </div>
+      </section>
+
+      <aside class="space-y-8">
+
+        <section class="rounded-3xl border border-zinc-200 bg-white p-7 shadow-sm dark:border-white/10 dark:bg-white/5 dark:shadow-xl dark:backdrop-blur">
+          <h2 class="text-xl font-semibold">What I build</h2>
+          <div class="mt-4 space-y-4">
+            {% for label, values in skills.items() %}
+            <div>
+              <h3 class="text-xs font-semibold uppercase tracking-wider text-zinc-500 dark:text-zinc-400">{{ label }}</h3>
+              <div class="mt-2 flex flex-wrap gap-2">
+                {% for skill in values %}
+                <span class="rounded-full border border-zinc-200 bg-zinc-100 px-3 py-1.5 text-sm text-zinc-700 dark:border-white/10 dark:bg-white/5 dark:text-zinc-200">{{ skill }}</span>
+                {% endfor %}
+              </div>
+            </div>
+            {% endfor %}
+          </div>
+        </section>
+
+        <section class="rounded-3xl border border-zinc-200 bg-white p-7 dark:border-white/10 dark:bg-white/5">
+          <h2 class="text-xl font-semibold">Certifications</h2>
+          <ul class="mt-4 space-y-3 text-sm">{% for cert in common.certifications %}<li>{{ cert }}</li>{% endfor %}</ul>
+        </section>
+
+        <section class="rounded-3xl border border-zinc-200 bg-white p-7 shadow-sm dark:border-white/10 dark:bg-white/5 dark:shadow-xl dark:backdrop-blur">
+          <h2 class="text-xl font-semibold">Education</h2>
+          <div class="mt-4 space-y-4 text-sm text-zinc-600 dark:text-zinc-300">
+            {%- for edu in education %}
+            <div class="flex items-start gap-3">
+              {%- if edu.logo %}
+              <div class="flex-none h-9 w-9 rounded-lg bg-zinc-100 dark:bg-white/10 flex items-center justify-center overflow-hidden">
+                <img src="logos/{{ edu.logo }}-color.svg" class="h-6 w-6 object-contain dark:hidden" alt="{{ edu.institution }}">
+                <img src="logos/{{ edu.logo }}-color-dark.svg" class="h-6 w-6 object-contain hidden dark:block" alt="{{ edu.institution }}">
+              </div>
+              {%- endif %}
+              <div>
+                <div class="font-medium text-zinc-900 dark:text-zinc-100">{{ edu.institution }}</div>
+                <div>{{ edu.degree }}</div>
+              </div>
+            </div>
+            {%- endfor %}
+          </div>
+        </section>
+
+        <section class="rounded-3xl border border-zinc-200 bg-white px-5 py-4 shadow-sm dark:border-white/10 dark:bg-white/5 dark:shadow-xl dark:backdrop-blur">
+          <h2 class="text-sm font-semibold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider">Links</h2>
+          <div class="mt-3 grid gap-1.5 text-sm text-zinc-600 dark:text-zinc-300">
+            <a href="{{ common.pdf | urlencode }}" class="group inline-flex items-center gap-2.5 rounded-lg px-2 py-1.5 transition hover:bg-zinc-100 dark:hover:bg-white/5">
+              {{ line_icon('download', 'h-3.5 w-3.5 flex-none text-cyan-500') }}
+              <span>PDF resume</span>
+            </a>
+            <a href="README.md" class="group inline-flex items-center gap-2.5 rounded-lg px-2 py-1.5 transition hover:bg-zinc-100 dark:hover:bg-white/5">
+              {{ line_icon('file-text', 'h-3.5 w-3.5 flex-none text-cyan-500') }}
+              <span>Markdown resume</span>
+            </a>
+            {% if common.github_repo %}<a href="{{ common.github_repo }}" target="_blank" rel="noopener noreferrer" class="group inline-flex items-center gap-2.5 rounded-lg px-2 py-1.5 transition hover:bg-zinc-100 dark:hover:bg-white/5">
+              {{ icon('github', 'h-3.5 w-3.5 flex-none text-cyan-500') }}
+              <span>Source repo</span>
+            </a>{% endif %}
+            {% if common.linkedin %}<a href="{{ common.linkedin }}" target="_blank" rel="noopener noreferrer" class="group inline-flex items-center gap-2.5 rounded-lg px-2 py-1.5 transition hover:bg-zinc-100 dark:hover:bg-white/5">
+              {{ icon('linkedin', 'h-3.5 w-3.5 flex-none text-cyan-500') }}
+              <span>LinkedIn profile</span>
+            </a>{% endif %}
+          </div>
+        </section>
+
+      </aside>
+    </main>
+  </div>
+
+  <script>
+    const themes = ['system', 'dark', 'light'];
+    let current = localStorage.getItem('theme') || 'system';
+    function applyTheme(t) {
+      current = t;
+      localStorage.setItem('theme', t);
+      const isDark = t === 'dark' || (t === 'system' && matchMedia('(prefers-color-scheme: dark)').matches);
+      document.documentElement.classList.toggle('dark', isDark);
+      document.getElementById('icon-system-wrap').classList.toggle('hidden', t !== 'system');
+      document.getElementById('icon-dark-wrap').classList.toggle('hidden', t !== 'dark');
+      document.getElementById('icon-light-wrap').classList.toggle('hidden', t !== 'light');
+      document.getElementById('theme-toggle').title = 'Theme: ' + t;
+    }
+    applyTheme(current);
+    const media = matchMedia('(prefers-color-scheme: dark)');
+    const handleThemeChange = () => { if (current === 'system') applyTheme('system'); };
+    media.addEventListener('change', handleThemeChange);
+    document.getElementById('theme-toggle').addEventListener('click', () => { applyTheme(themes[(themes.indexOf(current) + 1) % 3]); });
+  </script>
+</body>
+</html>
